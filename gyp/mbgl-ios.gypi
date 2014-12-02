@@ -31,11 +31,9 @@
       'standalone_static_library': 1,
       'hard_dependency': 1,
       'sources': [
-        '../platform/ios/cache_database_library.mm',
-        '../platform/darwin/log_nslog.mm',
-        '../platform/darwin/string_nsstring.mm',
-        '../platform/darwin/http_request_baton_cocoa.mm',
-        '../platform/darwin/image.mm',
+        '<!@(find ./include/mbgl/platform/darwin -type f)',
+        '<!@(find ./platform/darwin -type f)',
+        '<!@(find ./platform/ios -type f)'
       ],
       'include_dirs': [
         '../include',
