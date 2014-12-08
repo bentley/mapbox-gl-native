@@ -41,6 +41,24 @@ elif [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
     mapbox_time "build_osx" \
     xcodebuild -project ./build/macosx/mapboxgl-app.xcodeproj -jobs $JOBS
 
+    mapbox_time "build_tests" \
+    make test -j$JOBS BUILDTYPE=${BUILDTYPE}
+
+    mapbox_time "checkout_test_suite" \
+    git submodule update --init test/suite
+
+    mapbox_time "run_tests" \
+    ./scripts/run_tests.sh
+
+    mapbox_time "compare_results" \
+    ./scripts/compare_images.sh
+
+    if [ ! -z "${AWS_ACCESS_KEY_ID}" ] && [ ! -z "${AWS_SECRET_ACCESS_KEY}" ] ; then
+        mapbox_time_start "deploy_results"
+        (cd ./test/suite/ && ./bin/deploy_results.sh)
+        mapbox_time_finish
+    fi
+
     #
     # build iOS
     #
