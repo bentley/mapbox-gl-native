@@ -18,11 +18,25 @@ class Source;
 
 class StyleBucketFill {
 public:
+    // Make movable only.
+    StyleBucketFill() = default;
+    StyleBucketFill(StyleBucketFill &&) = default;
+    StyleBucketFill& operator=(StyleBucketFill &&) = default;
+    StyleBucketFill(const StyleBucketFill &) = delete;
+    StyleBucketFill& operator=(const StyleBucketFill &) = delete;
+
     WindingType winding = WindingType::NonZero;
 };
 
 class StyleBucketLine {
 public:
+    // Make movable only.
+    StyleBucketLine() = default;
+    StyleBucketLine(StyleBucketLine &&) = default;
+    StyleBucketLine& operator=(StyleBucketLine &&) = default;
+    StyleBucketLine(const StyleBucketLine &) = delete;
+    StyleBucketLine& operator=(const StyleBucketLine &) = delete;
+
     CapType cap = CapType::Butt;
     JoinType join = JoinType::Miter;
     float miter_limit = 2.0f;
@@ -32,11 +46,11 @@ public:
 class StyleBucketSymbol {
 public:
     // Make movable only.
-    inline StyleBucketSymbol() = default;
-    inline StyleBucketSymbol(StyleBucketSymbol &&) = default;
-    inline StyleBucketSymbol& operator=(StyleBucketSymbol &&) = default;
-    inline StyleBucketSymbol(const StyleBucketSymbol &) = delete;
-    inline StyleBucketSymbol& operator=(const StyleBucketSymbol &) = delete;
+    StyleBucketSymbol() = default;
+    StyleBucketSymbol(StyleBucketSymbol &&) = default;
+    StyleBucketSymbol& operator=(StyleBucketSymbol &&) = default;
+    StyleBucketSymbol(const StyleBucketSymbol &) = delete;
+    StyleBucketSymbol& operator=(const StyleBucketSymbol &) = delete;
 
     PlacementType placement = PlacementType::Point;
     float min_distance = 250.0f;
@@ -80,13 +94,19 @@ public:
 
 class StyleBucketRaster {
 public:
+    // Make movable only.
+    StyleBucketRaster() = default;
+    StyleBucketRaster(StyleBucketRaster &&) = default;
+    StyleBucketRaster& operator=(StyleBucketRaster &&) = default;
+    StyleBucketRaster(const StyleBucketRaster &) = delete;
+    StyleBucketRaster& operator=(const StyleBucketRaster &) = delete;
 };
 
 typedef mapbox::util::variant<StyleBucketFill, StyleBucketLine, StyleBucketSymbol,
                               StyleBucketRaster, std::false_type> StyleBucketRender;
 
 
-class StyleBucket {
+class StyleBucket : public util::noncopyable {
 public:
     typedef util::ptr<StyleBucket> Ptr;
 

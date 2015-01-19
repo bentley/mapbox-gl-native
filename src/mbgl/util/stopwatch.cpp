@@ -24,7 +24,7 @@ stopwatch::stopwatch(const std::string &name_, EventSeverity severity_, Event ev
 void stopwatch::report(const std::string &name_) {
     timestamp duration = now() - start;
 
-    Log::Record(severity, event, name_ + ": " + util::toString(double(duration) / 1_millisecond) + "ms");
+    Log::Record(severity, event, "%s: %.1fms", name_.c_str(), double(duration) / 1_millisecond);
     start += duration;
 }
 
