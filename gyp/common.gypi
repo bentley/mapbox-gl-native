@@ -30,13 +30,24 @@
           'GCC_WARN_PEDANTIC': 'YES',
           'GCC_WARN_UNINITIALIZED_AUTOS': 'YES_AGGRESSIVE',
         },
+      }, {
+        'cflags_cc': [
+          '-std=c++11',
+          '-Werror',
+          '-Wall',
+          '-Wextra',
+          '-Wshadow',
+          '-Wno-variadic-macros',
+          '-Wno-error=unused-parameter',
+          '-Wno-unknown-warning-option',
+          '-frtti',
+          '-fexceptions',
+        ],
       }],
       ['OS=="linux"', {
         'cflags_cc': [
           '-Wno-unknown-pragmas', # We are using '#pragma mark', but it is only available on Darwin.
           '-Wno-literal-suffix', # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61653
-          '-Wno-unknown-warning-option',
-          '-Wno-error=unused-parameter',
         ],
       }],
     ],
@@ -71,7 +82,6 @@
         ],
       }],
     ],
-    'cflags_cc': [ '-std=c++11', '-Werror', '-Wall', '-Wextra', '-Wshadow', '-frtti', '-fexceptions' ],
     'configurations': {
       'Debug': {
         'cflags_cc': [ '-g', '-O0', '-fno-omit-frame-pointer','-fwrapv', '-fstack-protector-all', '-fno-common' ],
