@@ -1,7 +1,4 @@
 {
-  'includes': [
-    './variables.gypi',
-  ],
   'variables': {
     'install_prefix%': '',
     'standalone_product_dir':'<!@(pwd)/build',
@@ -62,7 +59,7 @@
           }, {
             'cflags_cc': [ '-fPIC' ],
           }],
-          ['platform == "ios"', {
+          ['host == "ios"', {
             'xcode_settings': {
               'SDKROOT': 'iphoneos',
               'SUPPORTED_PLATFORMS': 'iphonesimulator iphoneos',
