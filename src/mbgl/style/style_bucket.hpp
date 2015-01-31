@@ -9,6 +9,7 @@
 #include <mbgl/util/variant.hpp>
 #include <mbgl/util/noncopyable.hpp>
 #include <mbgl/util/ptr.hpp>
+#include <mbgl/style/class_properties.hpp>
 
 #include <forward_list>
 
@@ -19,6 +20,7 @@ class Source;
 class StyleBucketFill {
 public:
     WindingType winding = WindingType::NonZero;
+    VisibilityType visibility = VisibilityType::Visible;
 };
 
 class StyleBucketLine {
@@ -27,6 +29,7 @@ public:
     JoinType join = JoinType::Miter;
     float miter_limit = 2.0f;
     float round_limit = 1.0f;
+    VisibilityType visibility = VisibilityType::Visible;
 };
 
 class StyleBucketSymbol {
@@ -41,6 +44,7 @@ public:
     PlacementType placement = PlacementType::Point;
     float min_distance = 250.0f;
     bool avoid_edges = false;
+    VisibilityType visibility = VisibilityType::Visible;
 
     struct {
         bool allow_overlap = false;
@@ -52,7 +56,7 @@ public:
         float rotate = 0.0f;
         float padding = 2.0f;
         bool keep_upright = false;
-        vec2<float> offset = {0, 0};
+        std::array<float, 2> offset = {{ 0, 0 }};
     } icon;
 
     struct {
@@ -71,7 +75,7 @@ public:
         float padding = 2.0f;
         bool keep_upright = true;
         TextTransformType transform = TextTransformType::None;
-        vec2<float> offset = {0, 0};
+        std::array<float, 2> offset = {{ 0, 0 }};
         bool allow_overlap = false;
         bool ignore_placement = false;
         bool optional = false;
@@ -80,10 +84,16 @@ public:
 
 class StyleBucketRaster {
 public:
+    VisibilityType visibility = VisibilityType::Visible;
+};
+
+class StyleBucketBackground {
+public:
+    VisibilityType visibility = VisibilityType::Visible;
 };
 
 typedef mapbox::util::variant<StyleBucketFill, StyleBucketLine, StyleBucketSymbol,
-                              StyleBucketRaster, std::false_type> StyleBucketRender;
+                              StyleBucketRaster, StyleBucketBackground, std::false_type> StyleBucketRender;
 
 
 class StyleBucket {
@@ -91,18 +101,20 @@ public:
     typedef util::ptr<StyleBucket> Ptr;
 
     StyleBucket(StyleLayerType type);
-
+    StyleLayerType type;
     std::string name;
     util::ptr<StyleSource> style_source;
     std::string source_layer;
     FilterExpression filter;
+    ClassProperties layout;
     StyleBucketRender render = std::false_type();
     float min_zoom = -std::numeric_limits<float>::infinity();
     float max_zoom = std::numeric_limits<float>::infinity();
     VisibilityType visibility = VisibilityType::Visible;
 };
 
-
+template <typename T>
+const T &defaultLayoutProperties();
 
 };
 

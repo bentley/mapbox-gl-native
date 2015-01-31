@@ -49,8 +49,8 @@ public:
     TileData(Tile::ID const& id, const SourceInfo&);
     ~TileData();
 
-    void request(uv::worker&, FileSource&, float pixelRatio, std::function<void ()> callback);
-    void reparse(uv::worker&, std::function<void ()> callback);
+    void request(uv::worker&, FileSource&, float pixelRatio, std::function<void ()> callback, float z);
+    void reparse(uv::worker&, std::function<void ()> callback, float z);
     void cancel();
     const std::string toString() const;
 
@@ -59,7 +59,7 @@ public:
     }
 
     // Override this in the child class.
-    virtual void parse() = 0;
+    virtual void parse(const float z) = 0;
     virtual void render(Painter &painter, util::ptr<StyleLayer> layer_desc, const mat4 &matrix) = 0;
     virtual bool hasData(StyleLayer const& layer_desc) const = 0;
 

@@ -13,7 +13,7 @@ RasterTileData::RasterTileData(Tile::ID const& id_, TexturePool& texturePool, co
 RasterTileData::~RasterTileData() {
 }
 
-void RasterTileData::parse() {
+void RasterTileData::parse(const float) {
     if (state != State::loaded) {
         return;
     }

@@ -28,7 +28,8 @@ const std::string TileData::toString() const {
 }
 
 void TileData::request(uv::worker& worker, FileSource& fileSource,
-                       float pixelRatio, std::function<void ()> callback) {
+                       float pixelRatio, std::function<void ()> callback,
+                       float z) {
     if (source.tiles.empty())
         return;
 
@@ -52,7 +53,7 @@ void TileData::request(uv::worker& worker, FileSource& fileSource,
     // Note: Somehow this feels slower than the change to request_http()
     std::weak_ptr<TileData> weak_tile = shared_from_this();
     req = fileSource.request(ResourceType::Tile, url);
-    req->onload([weak_tile, url, callback, &worker](const Response &res) {
+    req->onload([weak_tile, url, callback, &worker, z](const Response &res) {
         util::ptr<TileData> tile = weak_tile.lock();
         if (!tile || tile->state == State::obsolete) {
             // noop. Tile is obsolete and we're now just waiting for the refcount
@@ -69,7 +70,7 @@ void TileData::request(uv::worker& worker, FileSource& fileSource,
             tile->data = res.data;
 
             // Schedule tile parsing in another thread
-            tile->reparse(worker, callback);
+            tile->reparse(worker, callback, z);
         } else {
 #if defined(DEBUG)
             fprintf(stderr, "[%s] tile loading failed: %ld, %s\n", url.c_str(), res.code, res.message.c_str());
@@ -88,14 +89,14 @@ void TileData::cancel() {
     }
 }
 
-void TileData::reparse(uv::worker& worker, std::function<void()> callback)
+void TileData::reparse(uv::worker& worker, std::function<void()> callback, const float z)
 {
     // We're creating a new work request. The work request deletes itself after it executed
     // the after work handler
     new uv::work<util::ptr<TileData>>(
         worker,
-        [](util::ptr<TileData>& tile) {
-            tile->parse();
+        [z](util::ptr<TileData>& tile) {
+            tile->parse(z);
         },
         [callback](util::ptr<TileData>&) {
             callback();

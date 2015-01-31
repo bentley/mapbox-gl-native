@@ -39,7 +39,7 @@ public:
                    const SourceInfo&);
     ~VectorTileData();
 
-    virtual void parse();
+    virtual void parse(float z);
     virtual void render(Painter &painter, util::ptr<StyleLayer> layer_desc, const mat4 &matrix);
     virtual bool hasData(StyleLayer const& layer_desc) const;
 

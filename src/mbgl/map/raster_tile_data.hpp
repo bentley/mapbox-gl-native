@@ -19,7 +19,7 @@ public:
     RasterTileData(Tile::ID const& id, TexturePool&, const SourceInfo&);
     ~RasterTileData();
 
-    virtual void parse();
+    virtual void parse(const float z);
     virtual void render(Painter &painter, util::ptr<StyleLayer> layer_desc, const mat4 &matrix);
     virtual bool hasData(StyleLayer const& layer_desc) const;
 

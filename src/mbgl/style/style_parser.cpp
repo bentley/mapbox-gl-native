@@ -345,6 +345,15 @@ template<> std::tuple<bool, std::string> StyleParser::parseProperty(JSVal value,
     return std::tuple<bool, std::string> { true, { value.GetString(), value.GetStringLength() } };
 }
 
+template<> std::tuple<bool, bool> StyleParser::parseProperty(JSVal value, const char *property_name) {
+    if (!value.IsBool()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a boolean", property_name);
+        return std::tuple<bool, bool> { false, true };
+    }
+
+    return std::tuple<bool, bool> { true, value.GetBool() };
+}
+
 template<> std::tuple<bool, TranslateAnchorType> StyleParser::parseProperty(JSVal value, const char *property_name) {
     if (!value.IsString()) {
         Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
@@ -361,6 +370,78 @@ template<> std::tuple<bool, RotateAnchorType> StyleParser::parseProperty<RotateA
     }
 
     return std::tuple<bool, RotateAnchorType> { true, RotateAnchorTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, CapType> StyleParser::parseProperty<CapType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, CapType> { false, CapType::Butt };
+    }
+
+    return std::tuple<bool, CapType> { true, CapTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, JoinType> StyleParser::parseProperty<JoinType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, JoinType> { false, JoinType::Miter };
+    }
+
+    return std::tuple<bool, JoinType> { true, JoinTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, VisibilityType> StyleParser::parseProperty<VisibilityType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, VisibilityType> { false, VisibilityType::Visible };
+    }
+
+    return std::tuple<bool, VisibilityType> { true, VisibilityTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, PlacementType> StyleParser::parseProperty<PlacementType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, PlacementType> { false, PlacementType::Point };
+    }
+
+    return std::tuple<bool, PlacementType> { true, PlacementTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, TextAnchorType> StyleParser::parseProperty<TextAnchorType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, TextAnchorType> { false, TextAnchorType::Center };
+    }
+
+    return std::tuple<bool, TextAnchorType> { true, TextAnchorTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, TextJustifyType> StyleParser::parseProperty<TextJustifyType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, TextJustifyType> { false, TextJustifyType::Center };
+    }
+
+    return std::tuple<bool, TextJustifyType> { true, TextJustifyTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, TextTransformType> StyleParser::parseProperty<TextTransformType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, TextTransformType> { false, TextTransformType::None };
+    }
+
+    return std::tuple<bool, TextTransformType> { true, TextTransformTypeClass({ value.GetString(), value.GetStringLength() }) };
+}
+
+template<> std::tuple<bool, RotationAlignmentType> StyleParser::parseProperty<RotationAlignmentType>(JSVal value, const char *property_name) {
+    if (!value.IsString()) {
+        Log::Warning(Event::ParseStyle, "value of '%s' must be a string", property_name);
+        return std::tuple<bool, RotationAlignmentType> { false, RotationAlignmentType::Map };
+    }
+
+    return std::tuple<bool, RotationAlignmentType> { true, RotationAlignmentTypeClass({ value.GetString(), value.GetStringLength() }) };
 }
 
 template<> std::tuple<bool, PropertyTransition> StyleParser::parseProperty(JSVal value, const char */*property_name*/) {
@@ -642,6 +723,55 @@ void StyleParser::parsePaint(JSVal value, ClassProperties &klass) {
     parseOptionalProperty<std::string>("background-image", Key::BackgroundImage, klass, value);
 }
 
+void StyleParser::parseLayout(JSVal value, ClassProperties &klass) {
+    using Key = PropertyKey;
+
+    parseOptionalProperty<VisibilityType>("visibility", Key::BackgroundVisibility, klass, value);
+
+    parseOptionalProperty<VisibilityType>("visibility", Key::FillVisibility, klass, value);
+
+    parseOptionalProperty<CapType>("line-cap", Key::LineCap, klass, value);
+    parseOptionalProperty<JoinType>("line-join", Key::LineJoin, klass, value);
+    parseOptionalProperty<Function<float>>("line-miter-limit", Key::LineMiterLimit, klass, value);
+    parseOptionalProperty<Function<float>>("line-round-limit", Key::LineRoundLimit, klass, value);
+    parseOptionalProperty<VisibilityType>("visibility", Key::LineVisibility, klass, value);
+
+    parseOptionalProperty<PlacementType>("symbol-placement", Key::SymbolPlacement, klass, value);
+    parseOptionalProperty<Function<float>>("symbol-min-distance", Key::SymbolMinDistance, klass, value);
+    parseOptionalProperty<bool>("symbol-avoid-edges", Key::SymbolAvoidEdges, klass, value);
+    parseOptionalProperty<bool>("icon-allow-overlap", Key::IconAllowOverlap, klass, value);
+    parseOptionalProperty<bool>("icon-ignore-placement", Key::IconIgnorePlacement, klass, value);
+    parseOptionalProperty<bool>("icon-optional", Key::IconOptional, klass, value);
+    parseOptionalProperty<RotationAlignmentType>("icon-rotation-alignment", Key::IconRotationAlignment, klass, value);
+    parseOptionalProperty<Function<float>>("icon-max-size", Key::IconMaxSize, klass, value);
+    parseOptionalProperty<std::string>("icon-image", Key::IconImage, klass, value);
+    parseOptionalProperty<Function<float>>("icon-rotate", Key::IconRotate, klass, value);
+    parseOptionalProperty<Function<float>>("icon-padding", Key::IconPadding, klass, value);
+    parseOptionalProperty<bool>("icon-keep-upright", Key::IconKeepUpright, klass, value);
+    parseOptionalProperty<Function<float>>("icon-offset", { Key::IconOffsetX, Key::IconOffsetY }, klass, value);
+    parseOptionalProperty<RotationAlignmentType>("text-rotation-alignment", Key::TextRotationAlignment, klass, value);
+    parseOptionalProperty<std::string>("text-field", Key::TextField, klass, value);
+    parseOptionalProperty<std::string>("text-font", Key::TextFont, klass, value);
+    parseOptionalProperty<Function<float>>("text-max-size", Key::TextMaxSize, klass, value);
+    parseOptionalProperty<Function<float>>("text-max-width", Key::TextMaxWidth, klass, value);
+    parseOptionalProperty<Function<float>>("text-line-height", Key::TextLineHeight, klass, value);
+    parseOptionalProperty<Function<float>>("text-letter-spacing", Key::TextLetterSpacing, klass, value);
+    parseOptionalProperty<TextJustifyType>("text-justify", Key::TextJustify, klass, value);
+    parseOptionalProperty<TextAnchorType>("text-anchor", Key::TextAnchor, klass, value);
+    parseOptionalProperty<Function<float>>("text-max-angle", Key::TextMaxAngle, klass, value);
+    parseOptionalProperty<Function<float>>("text-rotate", Key::TextRotate, klass, value);
+    parseOptionalProperty<Function<float>>("text-padding", Key::TextPadding, klass, value);
+    parseOptionalProperty<bool>("text-keep-upright", Key::TextKeepUpright, klass, value);
+    parseOptionalProperty<TextTransformType>("text-transform", Key::TextTransform, klass, value);
+    parseOptionalProperty<Function<float>>("text-offset", { Key::TextOffsetX, Key::TextOffsetY }, klass, value);
+    parseOptionalProperty<bool>("text-allow-overlap", Key::TextAllowOverlap, klass, value);
+    parseOptionalProperty<bool>("text-ignore-placement", Key::TextIgnorePlacement, klass, value);
+    parseOptionalProperty<bool>("text-optional", Key::TextOptional, klass, value);
+    parseOptionalProperty<VisibilityType>("visibility", Key::SymbolVisibility, klass, value);
+
+    parseOptionalProperty<VisibilityType>("visibility", Key::RasterVisibility, klass, value);
+}
+
 void StyleParser::parseReference(JSVal value, util::ptr<StyleLayer> &layer) {
     if (!value.IsString()) {
         Log::Warning(Event::ParseStyle, "layer ref of '%s' must be a string", layer->id.c_str());
@@ -704,7 +834,7 @@ void StyleParser::parseBucket(JSVal value, util::ptr<StyleLayer> &layer) {
 
     if (value.HasMember("layout")) {
         JSVal value_render = replaceConstant(value["layout"]);
-        parseLayout(value_render, layer);
+        parseLayout(value_render, layer->bucket->layout);
     }
 
     if (value.HasMember("minzoom")) {
@@ -723,89 +853,6 @@ void StyleParser::parseBucket(JSVal value, util::ptr<StyleLayer> &layer) {
         } else {
             Log::Warning(Event::ParseStyle, "maxzoom of layer %s must be numeric", layer->id.c_str());
         }
-    }
-}
-
-void StyleParser::parseLayout(JSVal value, util::ptr<StyleLayer> &layer) {
-    if (!value.IsObject()) {
-        Log::Warning(Event::ParseStyle, "layout property of layer '%s' must be an object", layer->id.c_str());
-        return;
-    }
-
-    StyleBucket &bucket = *layer->bucket;
-    parseRenderProperty<VisibilityTypeClass>(value, bucket.visibility, "visibility");
-
-    switch (layer->type) {
-    case StyleLayerType::Fill: {
-        StyleBucketFill &render = bucket.render.get<StyleBucketFill>();
-
-        parseRenderProperty<WindingTypeClass>(value, render.winding, "fill-winding");
-    } break;
-
-    case StyleLayerType::Line: {
-        StyleBucketLine &render = bucket.render.get<StyleBucketLine>();
-
-        parseRenderProperty<CapTypeClass>(value, render.cap, "line-cap");
-        parseRenderProperty<JoinTypeClass>(value, render.join, "line-join");
-        parseRenderProperty(value, render.miter_limit, "line-miter-limit");
-        parseRenderProperty(value, render.round_limit, "line-round-limit");
-    } break;
-
-    case StyleLayerType::Symbol: {
-        StyleBucketSymbol &render = bucket.render.get<StyleBucketSymbol>();
-
-        parseRenderProperty<PlacementTypeClass>(value, render.placement, "symbol-placement");
-        if (render.placement == PlacementType::Line) {
-            // Change the default value in case of line placement.
-            render.text.rotation_alignment = RotationAlignmentType::Map;
-            render.icon.rotation_alignment = RotationAlignmentType::Map;
-        }
-
-        parseRenderProperty(value, render.min_distance, "symbol-min-distance");
-        parseRenderProperty(value, render.avoid_edges, "symbol-avoid-edges");
-
-        parseRenderProperty(value, render.icon.allow_overlap, "icon-allow-overlap");
-        parseRenderProperty(value, render.icon.ignore_placement, "icon-ignore-placement");
-        parseRenderProperty(value, render.icon.optional, "icon-optional");
-        parseRenderProperty<RotationAlignmentTypeClass>(value, render.icon.rotation_alignment, "icon-rotation-alignment");
-        parseRenderProperty(value, render.icon.max_size, "icon-max-size");
-        parseRenderProperty(value, render.icon.image, "icon-image");
-        parseRenderProperty(value, render.icon.rotate, "icon-rotate");
-        parseRenderProperty(value, render.icon.padding, "icon-padding");
-        parseRenderProperty(value, render.icon.keep_upright, "icon-keep-upright");
-        parseRenderProperty(value, render.icon.offset, "icon-offset");
-
-
-        parseRenderProperty<RotationAlignmentTypeClass>(value, render.text.rotation_alignment, "text-rotation-alignment");
-        parseRenderProperty(value, render.text.field, "text-field");
-        parseRenderProperty(value, render.text.font, "text-font");
-        parseRenderProperty(value, render.text.max_size, "text-max-size");
-        if (parseRenderProperty(value, render.text.max_width, "text-max-width")) {
-            render.text.max_width *= 24; // em
-        }
-        if (parseRenderProperty(value, render.text.line_height, "text-line-height")) {
-            render.text.line_height *= 24; // em
-        }
-        if (parseRenderProperty(value, render.text.letter_spacing, "text-letter-spacing")) {
-            render.text.letter_spacing *= 24; // em
-        }
-        parseRenderProperty<TextJustifyTypeClass>(value, render.text.justify, "text-justify");
-        parseRenderProperty<TextAnchorTypeClass>(value, render.text.anchor, "text-anchor");
-        parseRenderProperty(value, render.text.max_angle, "text-max-angle");
-        parseRenderProperty(value, render.text.rotate, "text-rotate");
-        parseRenderProperty(value, render.text.slant, "text-slant");
-        parseRenderProperty(value, render.text.padding, "text-padding");
-        parseRenderProperty(value, render.text.keep_upright, "text-keep-upright");
-        parseRenderProperty<TextTransformTypeClass>(value, render.text.transform, "text-transform");
-        parseRenderProperty(value, render.text.offset, "text-offset");
-        parseRenderProperty(value, render.text.allow_overlap, "text-allow-overlap");
-        parseRenderProperty(value, render.text.ignore_placement, "text-ignore-placement");
-        parseRenderProperty(value, render.text.optional, "text-optional");
-    } break;
-
-    default:
-        // There are no render properties for these layer types.
-        break;
     }
 }
 

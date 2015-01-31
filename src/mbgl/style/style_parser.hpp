@@ -53,7 +53,7 @@ private:
     void parsePaint(JSVal, ClassProperties &properties);
     void parseReference(JSVal value, util::ptr<StyleLayer> &layer);
     void parseBucket(JSVal value, util::ptr<StyleLayer> &layer);
-    void parseLayout(JSVal value, util::ptr<StyleLayer> &layer);
+    void parseLayout(JSVal, ClassProperties &properties);
     void parseSprite(JSVal value);
     void parseGlyphURL(JSVal value);
 

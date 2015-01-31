@@ -157,7 +157,8 @@ TileData::State Source::addTile(Map& map, uv::worker& worker,
                                 SpriteAtlas& spriteAtlas, util::ptr<Sprite> sprite,
                                 FileSource& fileSource, TexturePool& texturePool,
                                 const Tile::ID& id,
-                                std::function<void ()> callback) {
+                                std::function<void ()> callback,
+                                float z) {
     const TileData::State state = hasTile(id);
 
     if (state != TileData::State::invalid) {
@@ -195,7 +196,7 @@ TileData::State Source::addTile(Map& map, uv::worker& worker,
             throw std::runtime_error("source type not implemented");
         }
 
-        new_tile.data->request(worker, fileSource, map.getState().getPixelRatio(), callback);
+        new_tile.data->request(worker, fileSource, map.getState().getPixelRatio(), callback, z);
         tile_data.emplace(new_tile.data->id, new_tile.data);
     }
 
@@ -311,7 +312,7 @@ void Source::update(Map& map, uv::worker& worker,
                                               glyphAtlas, glyphStore,
                                               spriteAtlas, sprite,
                                               fileSource, texturePool,
-                                              id, callback);
+                                              id, callback, zoom);
 
         if (state != TileData::State::parsed) {
             // The tile we require is not yet loaded. Try to find a parent or

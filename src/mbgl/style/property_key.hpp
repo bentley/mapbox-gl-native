@@ -14,6 +14,8 @@ enum class PropertyKey {
     FillTranslateAnchor,
     FillImage,
 
+    FillVisibility,
+
     LineOpacity,
     LineColor,
     LineTranslate, // for transitions only
@@ -26,8 +28,18 @@ enum class PropertyKey {
     LineDashArray, // for transitions only
     LineImage,
 
+    LineCap,
+    LineJoin,
+    LineMiterLimit,
+    LineRoundLimit,
+    LineVisibility,
+
+    SymbolPlacement,
+    SymbolMinDistance,
+    SymbolAvoidEdges,
+    SymbolVisibility,
+
     IconOpacity,
-    IconRotate,
     IconSize,
     IconColor,
     IconHaloColor,
@@ -37,6 +49,18 @@ enum class PropertyKey {
     IconTranslateX,
     IconTranslateY,
     IconTranslateAnchor,
+
+    IconAllowOverlap,
+    IconIgnorePlacement,
+    IconOptional,
+    IconRotationAlignment,
+    IconMaxSize,
+    IconImage,
+    IconPadding,
+    IconRotate,
+    IconKeepUpright,
+    IconOffsetX,
+    IconOffsetY,
 
     TextOpacity,
     TextSize,
@@ -49,6 +73,26 @@ enum class PropertyKey {
     TextTranslateY,
     TextTranslateAnchor,
 
+    TextRotationAlignment,
+    TextField,
+    TextFont,
+    TextMaxSize,
+    TextMaxWidth,
+    TextLineHeight,
+    TextLetterSpacing,
+    TextMaxAngle,
+    TextRotate,
+    TextPadding,
+    TextIgnorePlacement,
+    TextOptional,
+    TextJustify,
+    TextAnchor,
+    TextKeepUpright,
+    TextTransform,
+    TextOffsetX,
+    TextOffsetY,
+    TextAllowOverlap,
+
     RasterOpacity,
     RasterHueRotate,
     RasterBrightness, // for transitions only
@@ -58,9 +102,13 @@ enum class PropertyKey {
     RasterContrast,
     RasterFade,
 
+    RasterVisibility,
+
     BackgroundOpacity,
     BackgroundColor,
-    BackgroundImage
+    BackgroundImage,
+
+    BackgroundVisibility
 };
 
 }

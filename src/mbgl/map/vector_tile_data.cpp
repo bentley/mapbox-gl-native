@@ -29,7 +29,7 @@ VectorTileData::~VectorTileData() {
 }
 
 
-void VectorTileData::parse() {
+void VectorTileData::parse(float z) {
     if (state != State::loaded) {
         return;
     }
@@ -42,7 +42,7 @@ void VectorTileData::parse() {
                           glyphAtlas, glyphStore,
                           spriteAtlas, sprite,
                           texturePool);
-        parser.parse();
+        parser.parse(z);
     } catch (const std::exception& ex) {
 #if defined(DEBUG)
         fprintf(stderr, "[%p] exception [%d/%d/%d]... failed: %s\n", this, id.z, id.x, id.y, ex.what());

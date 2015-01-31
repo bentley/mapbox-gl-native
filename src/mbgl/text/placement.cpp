@@ -133,8 +133,8 @@ Placement Placement::getIcon(Anchor &anchor, const Rect<uint16_t> &image, float 
     const float x = image.w / 2.0f; // No need to divide by image.pixelRatio here?
     const float y = image.h / 2.0f; // image.pixelRatio;
 
-    const float dx = props.icon.offset.x;
-    const float dy = props.icon.offset.y;
+    const float dx = props.icon.offset[0];
+    const float dy = props.icon.offset[1];
     float x1 = (dx - x);
     float x2 = (dx + x);
     float y1 = (dy - y);

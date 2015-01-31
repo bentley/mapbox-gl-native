@@ -183,7 +183,7 @@ void SymbolBucket::addFeatures(const VectorTileLayer &layer, const FilterExpress
                 /* verticalAlign */ verticalAlign,
                 /* justify */ justify,
                 /* spacing */ properties.text.letter_spacing,
-                /* translate */ properties.text.offset);
+                /* translate */ vec2<float>(properties.text.offset[0], properties.text.offset[1]));
 
             // Add the glyphs we need for this label to the glyph atlas.
             if (shaping.size()) {

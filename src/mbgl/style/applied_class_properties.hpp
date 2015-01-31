@@ -26,7 +26,7 @@ public:
     std::list<AppliedClassProperty> properties;
 
 public:
-    // Returns thie ID of the most recent
+    // Returns the ID of the most recent
     ClassID mostRecent() const;
     void add(ClassID class_id, timestamp begin, timestamp end, const PropertyValue &value);
     bool hasTransitions() const;

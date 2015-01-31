@@ -65,7 +65,8 @@ private:
                             SpriteAtlas&, util::ptr<Sprite>,
                             FileSource&, TexturePool&,
                             const Tile::ID&,
-                            std::function<void ()> callback);
+                            std::function<void ()> callback,
+                            float z);
 
     TileData::State hasTile(const Tile::ID& id);
 
